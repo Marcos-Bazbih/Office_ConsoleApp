@@ -12,7 +12,7 @@ namespace Office_ConsoleApp
         static void Main(string[] args)
         {
             string stringConnection = "Data Source=LENOVO-MARCOS;Initial Catalog=OfficeDb;Integrated Security=True;Pooling=False";
-            
+
             //   employee
             //List<Employee> employees = new List<Employee>();
             //ShowAllEmpployees(stringConnection);
@@ -23,15 +23,343 @@ namespace Office_ConsoleApp
 
 
             //   manager
-            List<Manager> managers = new List<Manager>();
+            //List<Manager> managers = new List<Manager>();
             //ShowAllManagers(stringConnection);
             //AddManagerToTable(stringConnection);
             //EditManager(stringConnection);
             //DeleteManager(stringConnection);
 
+
+
+            //   contract worker
+            List<ContractWorker> workers = new List<ContractWorker>();
+            //ShowAllWorkers(stringConnection);
+            //AddWorkerToTable(stringConnection);
+            //EditWorker(stringConnection);
+            DeleteWorker(stringConnection);
+
         }
 
 
+
+
+
+
+        //    contract worker
+        static void ShowAllWorkers(string stringConn)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM ContractWorker";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    var dataFromDb = cmd.ExecuteReader();
+
+                    if (dataFromDb.HasRows)
+                    {
+                        while (dataFromDb.Read())
+                        {
+                            Console.WriteLine(dataFromDb.GetInt32(0));
+                            Console.WriteLine(dataFromDb.GetString(1));
+                            Console.WriteLine(dataFromDb.GetString(2));
+                            Console.WriteLine(dataFromDb.GetString(3));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("no rows found");
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                Console.WriteLine("error with Database");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        static void AddWorkerToTable(string stringConn)
+        {
+            Console.WriteLine("Enter a name");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Enter email");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Enter companyName");
+            string companyName = Console.ReadLine();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+                    string query = $@"INSERT INTO ContractWorker(Name, Email, CompanyName)
+                                     VALUES('{name}', '{email}', '{companyName}')";
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+        static void EditWorker(string stringConn)
+        {
+            Console.WriteLine("Enter id number");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter new name");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Enter new email");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Enter new company name");
+            string companyName = Console.ReadLine();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+                    string query = $@"UPDATE ContractWorker 
+                                    SET Name = '{name}', Email = '{email}',
+                                    CompanyName = '{companyName}'
+                                    WHERE Id = {id}";
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+        static void DeleteWorker(string stringConn)
+        {
+            Console.WriteLine("Enter id number");
+            int id = int.Parse(Console.ReadLine());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+                    string query = $@"DELETE FROM ContractWorker WHERE Id = {id}";
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+
+
+
+
+
+
+
+
+        //    employee
+        static void DeleteEmployee(string stringConn)
+        {
+            Console.WriteLine("Enter id number");
+            int id = int.Parse(Console.ReadLine());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+                    string query = $@"DELETE FROM Employee WHERE Id = {id}";
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+        static void EditEmployee(string stringConn)
+        {
+            Console.WriteLine("Enter id number");
+            int id = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter new name");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Enter new birthday");
+            string birthday = Console.ReadLine();
+
+            Console.WriteLine("Enter new email");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Enter new salary");
+            int salary = int.Parse(Console.ReadLine());
+
+
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+                    string query = $@"UPDATE Employee 
+                                    SET Name = '{name}', Birthday = '{birthday}', 
+                                    Email = '{email}', Salary = {salary}
+                                    WHERE Id = {id}";
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+        static void AddEmployeeToTable(string stringConn)
+        {
+            Console.WriteLine("Enter a name");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Enter birthday");
+            string birthday = Console.ReadLine();
+
+            Console.WriteLine("Enter email");
+            string email = Console.ReadLine();
+
+            Console.WriteLine("Enter salary");
+            int salary = int.Parse(Console.ReadLine());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+
+
+                    string query = $@"INSERT INTO Employee(Name, Birthday, Email, Salary)
+                                     VALUES('{name}', '{birthday}', '{email}', {salary})";
+
+
+                    SqlCommand cmd = new SqlCommand(query, connection);
+
+                    int rowsEffected = cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(rowsEffected);
+                    connection.Close();
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Exception Error occurred");
+            }
+        }
+        static void ShowAllEmpployees(string stringConn)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(stringConn))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM Employee";
+                    SqlCommand cmd = new SqlCommand(query, connection);
+                    var dataFromDb = cmd.ExecuteReader();
+
+                    if (dataFromDb.HasRows)
+                    {
+                        while (dataFromDb.Read())
+                        {
+                            Console.WriteLine(dataFromDb.GetInt32(0));
+                            Console.WriteLine(dataFromDb.GetString(1));
+                            Console.WriteLine(dataFromDb.GetDateTime(2));
+                            Console.WriteLine(dataFromDb.GetString(3));
+                            Console.WriteLine(dataFromDb.GetInt32(4));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("no rows found");
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                Console.WriteLine("error with Database");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
 
 
@@ -200,169 +528,6 @@ namespace Office_ConsoleApp
             catch (Exception)
             {
                 Console.WriteLine("Exception Error occurred");
-            }
-        }
-
-
-
-
-        //    employee
-        static void DeleteEmployee(string stringConn)
-        {
-            Console.WriteLine("Enter id number");
-            int id = int.Parse(Console.ReadLine());
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(stringConn))
-                {
-                    connection.Open();
-
-                    string query = $@"DELETE FROM Employee WHERE Id = {id}";
-
-                    SqlCommand cmd = new SqlCommand(query, connection);
-
-                    int rowsEffected = cmd.ExecuteNonQuery();
-
-                    Console.WriteLine(rowsEffected);
-                    connection.Close();
-                }
-
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception Error occurred");
-            }
-        }
-        static void EditEmployee(string stringConn)
-        {
-            Console.WriteLine("Enter id number");
-            int id = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Enter new name");
-            string name = Console.ReadLine();
-
-            Console.WriteLine("Enter new birthday");
-            string birthday = Console.ReadLine();
-
-            Console.WriteLine("Enter new email");
-            string email = Console.ReadLine();
-
-            Console.WriteLine("Enter new salary");
-            int salary = int.Parse(Console.ReadLine());
-
-
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(stringConn))
-                {
-                    connection.Open();
-
-                    string query = $@"UPDATE Employee 
-                                    SET Name = '{name}', Birthday = '{birthday}', 
-                                    Email = '{email}', Salary = {salary}
-                                    WHERE Id = {id}";
-
-                    SqlCommand cmd = new SqlCommand(query, connection);
-
-                    int rowsEffected = cmd.ExecuteNonQuery();
-
-                    Console.WriteLine(rowsEffected);
-                    connection.Close();
-                }
-
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception Error occurred");
-            }
-        }
-        static void AddEmployeeToTable(string stringConn)
-        {
-            Console.WriteLine("Enter a name");
-            string name = Console.ReadLine();
-
-            Console.WriteLine("Enter birthday");
-            string birthday = Console.ReadLine();
-
-            Console.WriteLine("Enter email");
-            string email = Console.ReadLine();
-
-            Console.WriteLine("Enter salary");
-            int salary = int.Parse(Console.ReadLine());
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(stringConn))
-                {
-                    connection.Open();
-
-
-                    string query = $@"INSERT INTO Employee(Name, Birthday, Email, Salary)
-                                     VALUES('{name}', '{birthday}', '{email}', {salary})";
-
-
-                    SqlCommand cmd = new SqlCommand(query, connection);
-
-                    int rowsEffected = cmd.ExecuteNonQuery();
-
-                    Console.WriteLine(rowsEffected);
-                    connection.Close();
-                }
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Exception Error occurred");
-            }
-        }
-        static void ShowAllEmpployees(string stringConn)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(stringConn))
-                {
-                    connection.Open();
-                    string query = "SELECT * FROM Employee";
-                    SqlCommand cmd = new SqlCommand(query, connection);
-                    var dataFromDb = cmd.ExecuteReader();
-
-                    if (dataFromDb.HasRows)
-                    {
-                        while (dataFromDb.Read())
-                        {
-                            Console.WriteLine(dataFromDb.GetInt32(0));
-                            Console.WriteLine(dataFromDb.GetString(1));
-                            Console.WriteLine(dataFromDb.GetDateTime(2));
-                            Console.WriteLine(dataFromDb.GetString(3));
-                            Console.WriteLine(dataFromDb.GetInt32(4));
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("no rows found");
-                    }
-                }
-            }
-            catch (SqlException)
-            {
-                Console.WriteLine("error with Database");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
     }
